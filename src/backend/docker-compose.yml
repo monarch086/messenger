@@ -20,17 +20,17 @@ services:
   api-gateway2:
     image: api-gateway
     ports:
-      - 5012:5012
+      - 5012:5011
     environment:
       ASPNETCORE_ENVIRONMENT: "Development"
-      ASPNETCORE_URLS: "http://*:5012"
+      ASPNETCORE_URLS: "http://*:5011"
       APPID: "2"
 
   api-gateway3:
     image: api-gateway
     ports:
-      - 5013:5013
+      - 5013:5011
     environment:
       ASPNETCORE_ENVIRONMENT: "Development"
-      ASPNETCORE_URLS: "http://*:5013"
+      ASPNETCORE_URLS: "http://*:5011"
       APPID: "3"
