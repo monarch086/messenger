@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  lb:
+    image: haproxy
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./haproxy:/usr/local/etc/haproxy
+
+  api-gateway1:
+    image: api-gateway
+    ports:
+      - 5011:5011
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ASPNETCORE_URLS: "http://*:5011"
+      APPID: "1"
+
+  api-gateway2:
+    image: api-gateway
+    ports:
+      - 5012:5012
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ASPNETCORE_URLS: "http://*:5012"
+      APPID: "2"
+
+  api-gateway3:
+    image: api-gateway
+    ports:
+      - 5013:5013
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ASPNETCORE_URLS: "http://*:5013"
+      APPID: "3"
