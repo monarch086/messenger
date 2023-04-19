@@ -2,13 +2,13 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {Message} from "../models/student.model";
 
 export type MessengerState = {
-    students: Message[],
+    messages: Message[],
     initialLoading: 'loading' | 'error' | 'loaded',
     additionalLoading: 'loading' | 'error' | 'loaded',
 };
 
 const initialState: MessengerState = {
-    students: [],
+    messages: [],
     initialLoading: 'loading',
     additionalLoading: 'loaded'
 };
@@ -27,9 +27,9 @@ export const studentsSlice = createSlice({
         dataLoaded: (state, { payload }: PayloadAction<{ additional: boolean, students: Message[] }>) => {
             state[payload.additional ? 'additionalLoading' : 'initialLoading'] = 'loaded';
             if (payload.additional) {
-                state.students.push(...payload.students);
+                state.messages.push(...payload.students);
             } else {
-                state.students = payload.students;
+                state.messages = payload.students;
             }
         },
     },

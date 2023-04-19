@@ -62,10 +62,10 @@ function App() {
     const [search, setSearch] = useState('');
     const [dialogData, setDialogData] = useState<Message | null>(null);
 
-    const state = useSelector((state: RootState) => state.students);
-    const error = useSelector((state: RootState) => state.students.initialLoading === 'error');
-    const loading = useSelector((state: RootState) => state.students.initialLoading === 'loading');
-    const additionalLoading = useSelector((state: RootState) => state.students.additionalLoading === 'loading');
+    const state = useSelector((state: RootState) => state.messenger);
+    const error = useSelector((state: RootState) => state.messenger.initialLoading === 'error');
+    const loading = useSelector((state: RootState) => state.messenger.initialLoading === 'loading');
+    const additionalLoading = useSelector((state: RootState) => state.messenger.additionalLoading === 'loading');
 
     const getStubData = (additional: boolean, skip?: number) => {
         dispatch(setLoading({additional}));
@@ -85,7 +85,7 @@ function App() {
     return <Container>
         <Search search={value => setSearch(value.toLowerCase())}></Search>
         <Table columns={columnsConfig}
-               data={loading ? [] : state.students}
+               data={loading ? [] : state.messages}
                loading={loading}
                error={error}
                additionalLoading={additionalLoading}
