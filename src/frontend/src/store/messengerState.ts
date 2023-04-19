@@ -1,16 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import {Message} from "../models/student.model";
+import {Chat, Message} from "../models/chat.model";
+
 
 export type MessengerState = {
-    messages: Message[],
-    initialLoading: 'loading' | 'error' | 'loaded',
-    additionalLoading: 'loading' | 'error' | 'loaded',
+    chats: Chat[],
 };
 
 const initialState: MessengerState = {
-    messages: [],
-    initialLoading: 'loading',
-    additionalLoading: 'loaded'
+    chats: [],
 };
 
 // immer.js under the hood
@@ -19,18 +16,18 @@ export const studentsSlice = createSlice({
     initialState,
     reducers: {
         setLoading: (state, { payload }: PayloadAction<{ additional: boolean }>) => {
-          state[payload.additional ? 'additionalLoading' : 'initialLoading'] = 'loading';
+          // state[payload.additional ? 'additionalLoading' : 'initialLoading'] = 'loading';
         },
         setError: (state, { payload }: PayloadAction<{ additional: boolean }>) => {
-            state[payload.additional ? 'additionalLoading' : 'initialLoading'] = 'error';
+            // state[payload.additional ? 'additionalLoading' : 'initialLoading'] = 'error';
         },
-        dataLoaded: (state, { payload }: PayloadAction<{ additional: boolean, students: Message[] }>) => {
-            state[payload.additional ? 'additionalLoading' : 'initialLoading'] = 'loaded';
+        dataLoaded: (state, { payload }: PayloadAction<{ additional: boolean, students: Chat[] }>) => {
+            /*state[payload.additional ? 'additionalLoading' : 'initialLoading'] = 'loaded';
             if (payload.additional) {
-                state.messages.push(...payload.students);
+                state.chats.push(...payload.students);
             } else {
-                state.messages = payload.students;
-            }
+                state.chats = payload.students;
+            }*/
         },
     },
 });
