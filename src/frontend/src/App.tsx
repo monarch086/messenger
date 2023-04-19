@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import axios from './stub/mocks';
-import {Student} from "./models/student.model";
+import {Message} from "./models/student.model";
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from "./store";
-import {dataLoaded, setLoading} from "./store/studentsState";
+import {dataLoaded, setLoading} from "./store/messengerState";
 import Table, {Column} from './components/table';
 import Search from "./components/search";
 import Dialog from "./components/dialog";
@@ -24,12 +24,12 @@ const sharedColumns = [
     },
 ];
 
-const columnsConfig: Column<Student>[] = [
+const columnsConfig: Column<Message>[] = [
     {
         header: 'Id',
         key: 'id',
     },
-    ...sharedColumns as Column<Student>[],
+    ...sharedColumns as Column<Message>[],
     {
         header: 'Grades',
         body: row => {
@@ -60,7 +60,7 @@ const Columns = styled.div`
 function App() {
     const dispatch = useDispatch();
     const [search, setSearch] = useState('');
-    const [dialogData, setDialogData] = useState<Student | null>(null);
+    const [dialogData, setDialogData] = useState<Message | null>(null);
 
     const state = useSelector((state: RootState) => state.students);
     const error = useSelector((state: RootState) => state.students.initialLoading === 'error');
@@ -78,7 +78,7 @@ function App() {
         getStubData(false, 0);
     }, [search]);
 
-    const rowClicked = (row: Student) => {
+    const rowClicked = (row: Message) => {
         setDialogData(row);
     }
 
@@ -99,7 +99,7 @@ function App() {
                     {
                         sharedColumns.slice(1).map((col, idx) => <React.Fragment key={idx}>
                             <span>{ col.header }</span>
-                            <span>{ dialogData[col.key as keyof Student] as string }</span>
+                            <span>{ dialogData[col.key as keyof Message] as string }</span>
                         </React.Fragment>)
                     }
                     {

@@ -1,5 +1,5 @@
 
-export interface Student {
+export interface Message {
     id: number | string;
     name: string;
     lecturesAttended: number;
