@@ -1,4 +1,4 @@
-namespace MessengerService;
+namespace MessageService;
 
 public class WeatherForecast
 {
