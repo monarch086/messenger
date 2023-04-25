@@ -11,11 +11,13 @@
 
 ### api-gateway
 
-To build api-gateway image use command: `docker build -t api-gateway .`
+To build API Gateway image use command: `docker build -t api-gateway .`
 
 ### user-service
 
 ### message-service
+
+To build MessageService image use command: `docker build -t message-service .`
 
 ### message-broker
 
