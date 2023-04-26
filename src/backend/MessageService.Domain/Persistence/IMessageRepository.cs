@@ -4,7 +4,7 @@ namespace MessageService.Domain.Persistence
 {
     public interface IMessageRepository
     {
-        Task AddMessageAsync(int senderId, int receiverId, string text);
+        Task<Message> AddMessageAsync(Message message);
 
         Task<IEnumerable<Message>> GetMessagesAsync(int userId, int friendId, DateTime from, DateTime till);
 
