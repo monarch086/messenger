@@ -2,7 +2,7 @@
 {
     public class Message
     {
-        public Guid Id { get; init; }
+        public Guid Id { get; init; } = default;
 
         public int SenderId { get; init; }
 
@@ -10,9 +10,19 @@
 
         public string Text { get; init; }
 
-        public Message(int senderId, int receiverId, string text, Guid id = default)
+        public DateTime Created { get; init; }
+
+        public Message(Guid id, int senderId, int receiverId, string text, DateTime created)
         {
             Id = id;
+            SenderId = senderId;
+            ReceiverId = receiverId;
+            Text = text;
+            Created = created;
+        }
+
+        public Message(int senderId, int receiverId, string text)
+        {
             SenderId = senderId;
             ReceiverId = receiverId;
             Text = text;
