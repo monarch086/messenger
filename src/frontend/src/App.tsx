@@ -5,6 +5,7 @@ import {dataLoaded, setLoading} from "./store/messengerState";
 import styled from "styled-components";
 import {Message} from "./models/chat.model";
 import ChatsList from "./components/chats-list.component";
+import ChatPage from "./components/chat-page.component";
 
 
 const RootContainer = styled.div`
@@ -40,7 +41,7 @@ function App() {
         <ChatsListContainer>
             <ChatsList></ChatsList>
         </ChatsListContainer>
-        <div>content</div>
+        <ChatPage></ChatPage>
     </RootContainer>
 }
 

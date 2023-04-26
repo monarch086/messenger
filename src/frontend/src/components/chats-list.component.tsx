@@ -23,7 +23,7 @@ const chatsData: Chat[] = [
         title: 'chat 1',
         messages: [{
             id: 0,
-            content: 'Wow cool this is my first message bro and it really works cool huh?'
+            content: 'cool first message and it really works cool huh?'
         }],
     },
     {

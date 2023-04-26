@@ -14,5 +14,7 @@ export interface User {
 export interface Message {
     id: number;
     content: string;
+    author?: string;
+    mine?: boolean;
     // date
 }
