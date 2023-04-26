@@ -34,3 +34,25 @@ services:
       ASPNETCORE_ENVIRONMENT: "Development"
       ASPNETCORE_URLS: "http://*:5011"
       APPID: "3"
+
+  cassandra-node1:
+    image: cassandra
+    ports:
+      - "7001:7000"
+    environment:
+      - 'CASSANDRA_SEEDS=cassandra-node2'
+
+  cassandra-node2:
+    image: cassandra
+    ports:
+      - "7002:7000"
+    environment:
+      - 'CASSANDRA_SEEDS=cassandra-node1'
+
+  message-service1:
+    image: message-service
+    ports:
+      - 5111:5011
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ASPNETCORE_URLS: "http://*:5011"
