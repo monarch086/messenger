@@ -4,25 +4,19 @@ import {RootState} from "./store";
 import {dataLoaded, setLoading} from "./store/messengerState";
 import styled from "styled-components";
 import {Message} from "./models/chat.model";
+import ChatsList from "./components/chats-list.component";
 
 
-const Container = styled.div`
-    height: 70%;
-    width: 70%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2rem;
+const RootContainer = styled.div`
+  height: 100%;
+  width: 100%;
+  display: flex;
 `;
 
-const Columns = styled.div`
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.25rem;
+const ChatsListContainer = styled.div`
+  flex: 30% 0 0;
+  max-width: 350px;
 `;
-
-
-
 
 function App() {
     const dispatch = useDispatch();
@@ -42,11 +36,12 @@ function App() {
         getStubData(false, 0);
     }, [search]);
 
-    const rowClicked = (row: Message) => {
-        setDialogData(row);
-    }
-
-    return <span>cool</span>
+    return <RootContainer>
+        <ChatsListContainer>
+            <ChatsList></ChatsList>
+        </ChatsListContainer>
+        <div>content</div>
+    </RootContainer>
 }
 
 export default App;
