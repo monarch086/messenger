@@ -5,9 +5,11 @@ VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessageService", "MessageService\MessageService.csproj", "{E21029D4-6E08-452F-9825-EBB811C108BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageService.Domain", "MessageService.Domain\MessageService.Domain.csproj", "{9349DD71-1A96-4E2B-A880-D0D2EA3FF2A8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessageService.Domain", "MessageService.Domain\MessageService.Domain.csproj", "{9349DD71-1A96-4E2B-A880-D0D2EA3FF2A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageService.Persistence", "MessageService.Persistence\MessageService.Persistence.csproj", "{6758437A-5619-4283-BDC7-9D3123407D99}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessageService.Persistence", "MessageService.Persistence\MessageService.Persistence.csproj", "{6758437A-5619-4283-BDC7-9D3123407D99}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageService.Cache", "MessageService.Cache\MessageService.Cache.csproj", "{3AC4A8D1-3CBF-467F-8492-C2D315CA2964}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{6758437A-5619-4283-BDC7-9D3123407D99}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6758437A-5619-4283-BDC7-9D3123407D99}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6758437A-5619-4283-BDC7-9D3123407D99}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3AC4A8D1-3CBF-467F-8492-C2D315CA2964}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AC4A8D1-3CBF-467F-8492-C2D315CA2964}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AC4A8D1-3CBF-467F-8492-C2D315CA2964}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AC4A8D1-3CBF-467F-8492-C2D315CA2964}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

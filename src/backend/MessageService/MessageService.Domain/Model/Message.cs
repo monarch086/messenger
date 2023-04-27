@@ -12,6 +12,10 @@
 
         public DateTime Created { get; init; }
 
+        public string ChatKey => SenderId > ReceiverId ?
+                    $"{SenderId}:{ReceiverId}" :
+                    $"{ReceiverId}:{SenderId}";
+
         public Message(Guid id, int senderId, int receiverId, string text, DateTime created)
         {
             Id = id;

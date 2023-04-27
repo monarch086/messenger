@@ -103,6 +103,34 @@ namespace MessageService.Persistence
             }
         }
 
+        public async Task<IEnumerable<Message>> GetMessagesAsync(int userId, DateTime from, DateTime till)
+        {
+            using (var session = Connect())
+            {
+                var resultMessages = new List<MessageDto>();
+                var mapper = new Mapper(session);
+                var query = @$"SELECT id, sender_id, receiver_id, text, created
+                               FROM {KEY_SPACE}.{TABLE_NAME}
+                               WHERE id > maxTimeuuid(?) AND id < minTimeuuid(?)
+                                 AND sender_id = ?
+                               ALLOW FILTERING;";
+
+                var records = await mapper.FetchAsync<MessageDto>(query, from, till, userId);
+                resultMessages.AddRange(records);
+
+                query = @$"SELECT id, sender_id, receiver_id, text, created
+                               FROM {KEY_SPACE}.{TABLE_NAME}
+                               WHERE id > maxTimeuuid(?) AND id < minTimeuuid(?)
+                                 AND receiver_id = ?
+                               ALLOW FILTERING;";
+
+                records = await mapper.FetchAsync<MessageDto>(query, from, till, userId);
+                resultMessages.AddRange(records);
+
+                return resultMessages.Select(r => r.ToModel());
+            }
+        }
+
         public void EnsureTableCreated()
         {
             using (var session = Connect())

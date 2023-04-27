@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MessageService.Cache\MessageService.Cache.csproj" />
     <ProjectReference Include="..\MessageService.Domain\MessageService.Domain.csproj" />
     <ProjectReference Include="..\MessageService.Persistence\MessageService.Persistence.csproj" />
   </ItemGroup>

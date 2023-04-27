@@ -1,4 +1,6 @@
+using MessageService.Cache;
 using MessageService.Configuration;
+using MessageService.Domain.Cache;
 using MessageService.Domain.Persistence;
 using MessageService.Persistence;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
@@ -11,6 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 var hosts = new string[] { "cassandra-node1" };
 
 builder.Services.AddScoped<IMessageRepository, MessageRepository>(_ => new MessageRepository(hosts));
+builder.Services.AddScoped<ICacheService, CacheService>();
 
 builder.Services.AddControllers(options =>
 {

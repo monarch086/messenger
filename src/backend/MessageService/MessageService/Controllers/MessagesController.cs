@@ -23,7 +23,7 @@ namespace MessageService.Controllers
             return savedMessage;
         }
 
-        [HttpGet("/{userId}")]
+        [HttpGet("/massages/{userId}")]
         public async Task<IEnumerable<Message>> Get(int userId, int friendId, DateTime from, DateTime till)
         {
             if (from == default || till == default)
@@ -37,7 +37,7 @@ namespace MessageService.Controllers
             return messages;
         }
 
-        [HttpGet("/{userId}/latest")]
+        [HttpGet("/massages/{userId}/latest")]
         public async Task<IEnumerable<Message>> GetLatest(int userId, Guid lastMessageId, int? friendId = null)
         {
             var messages = await _messageRepository.GetLatestMessagesAsync(userId, lastMessageId, friendId);
