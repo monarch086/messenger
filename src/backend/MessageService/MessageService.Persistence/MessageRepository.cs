@@ -8,7 +8,6 @@ namespace MessageService.Persistence
 {
     public class MessageRepository : IMessageRepository
     {
-        private const string HOST = "127.0.0.1";
         private const string KEY_SPACE = "CassandraDbContext";
         private const string TABLE_NAME = "messages";
 
@@ -54,9 +53,12 @@ namespace MessageService.Persistence
                                FROM {KEY_SPACE}.{TABLE_NAME}
                                WHERE id > ?
                                  AND sender_id = ?
+                                 {(friendId.HasValue? "AND receiver_id = ?" : "")}
                                ALLOW FILTERING;";
 
-                var records = await mapper.FetchAsync<MessageDto>(query, lastMessageId, userId);
+                var records = friendId.HasValue
+                              ? await mapper.FetchAsync<MessageDto>(query, lastMessageId, userId, friendId)
+                              : await mapper.FetchAsync<MessageDto>(query, lastMessageId, userId);
 
                 resultMessages.AddRange(records);
 
@@ -64,9 +66,12 @@ namespace MessageService.Persistence
                                FROM {KEY_SPACE}.{TABLE_NAME}
                                WHERE id > ?
                                  AND receiver_id = ?
+                                 {(friendId.HasValue ? "AND sender_id = ?" : "")}
                                ALLOW FILTERING;";
 
-                records = await mapper.FetchAsync<MessageDto>(query, lastMessageId, userId);
+                records = friendId.HasValue
+                              ? await mapper.FetchAsync<MessageDto>(query, lastMessageId, userId, friendId)
+                              : await mapper.FetchAsync<MessageDto>(query, lastMessageId, userId);
 
                 resultMessages.AddRange(records);
 
