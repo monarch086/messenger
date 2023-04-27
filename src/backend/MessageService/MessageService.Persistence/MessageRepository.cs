@@ -153,9 +153,11 @@ namespace MessageService.Persistence
             else
                 builder.AddContactPoint(_hosts.Single());
 
-            var cluster = builder.Build();
+            var cluster = builder
+                .WithDefaultKeyspace(KEY_SPACE)
+                .Build();
 
-            return cluster.Connect(KEY_SPACE);
+            return cluster.ConnectAndCreateDefaultKeyspaceIfNotExists();
         }
     }
 }
