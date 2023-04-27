@@ -1,4 +1,4 @@
-﻿using Cassandra;
+using Cassandra;
 using Cassandra.Mapping;
 using MessageService.Domain.Model;
 using MessageService.Domain.Persistence;
@@ -86,6 +86,46 @@ namespace MessageService.Persistence
                 resultMessages.AddRange(records);
 
                 return resultMessages.Select(r => r.ToModel());
+            }
+        }
+
+        public void CreateTable()
+        {
+            using (var session = Connect())
+            {
+                var query = $"CREATE KEYSPACE IF NOT EXISTS {KEY_SPACE} " +
+                            $"WITH replication = {{'class': 'NetworkTopologyStrategy', 'datacenter1': '3'}} " +
+                            $"AND durable_writes = true;";
+                session.Execute(query);
+
+                query = @$"
+                CREATE TABLE IF NOT EXISTS {KEY_SPACE}.{TABLE_NAME} (
+                    id timeuuid,
+                    sender_id int,
+                    receiver_id int,
+                    text text,
+                    created timestamp,
+                    PRIMARY KEY (id, created)
+                )
+                WITH CLUSTERING ORDER BY (created DESC);";
+                session.Execute(query);
+
+                query = $"CREATE INDEX IF NOT EXISTS sender_idx " +
+                        $"ON {KEY_SPACE}.{TABLE_NAME} (sender_id);";
+                session.Execute(query);
+
+                query = $"CREATE INDEX IF NOT EXISTS receiver_idx " +
+                        $"ON {KEY_SPACE}.{TABLE_NAME} (receiver_id);";
+                session.Execute(query);
+            }
+        }
+
+        public void DropTable()
+        {
+            using (var session = Connect())
+            {
+                var query = @$"DROP TABLE IF EXISTS {KEY_SPACE}.{TABLE_NAME};";
+                session.Execute(query);
             }
         }
 
