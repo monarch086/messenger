@@ -6,8 +6,11 @@ using Microsoft.AspNetCore.Mvc.ApplicationModels;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var localhost = new string[] { "127.0.0.1" };
-builder.Services.AddScoped<IMessageRepository, MessageRepository>(_ => new MessageRepository(localhost));
+
+//var hosts = new string[] { "127.0.0.1" };
+var hosts = new string[] { "cassandra-node1" };
+
+builder.Services.AddScoped<IMessageRepository, MessageRepository>(_ => new MessageRepository(hosts));
 
 builder.Services.AddControllers(options =>
 {
@@ -19,6 +22,11 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope()){
+    var repo = scope.ServiceProvider.GetRequiredService<IMessageRepository>();
+    repo.EnsureTableCreated();
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -26,7 +34,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthorization();
 

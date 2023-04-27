@@ -13,8 +13,6 @@ namespace MessageService.Controllers
         public MessagesController(IMessageRepository messageRepository)
         {
             _messageRepository = messageRepository;
-
-            // _messageRepository.EnsureTableCreated();
         }
 
         [HttpPost]
