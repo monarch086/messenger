@@ -37,15 +37,41 @@ namespace MessageService.Persistence
             }
         }
 
-        public Task<IEnumerable<Message>> GetLatestMessagesAsync(int userId, int lastMessageId, int? friendId = null)
+        public async Task<IEnumerable<Message>> GetLatestMessagesAsync(int userId, Guid lastMessageId, int? friendId = null)
         {
-            throw new NotImplementedException();
+            using (var session = Connect())
+            {
+                var resultMessages = new List<MessageDto>();
+                var mapper = new Mapper(session);
+                var query = @$"SELECT id, sender_id, receiver_id, text, created
+                               FROM {KEY_SPACE}.{TABLE_NAME}
+                               WHERE id > ?
+                                 AND sender_id = ?
+                               ALLOW FILTERING;";
+
+                var records = await mapper.FetchAsync<MessageDto>(query, lastMessageId, userId);
+
+                resultMessages.AddRange(records);
+
+                query = @$"SELECT id, sender_id, receiver_id, text, created
+                               FROM {KEY_SPACE}.{TABLE_NAME}
+                               WHERE id > ?
+                                 AND receiver_id = ?
+                               ALLOW FILTERING;";
+
+                records = await mapper.FetchAsync<MessageDto>(query, lastMessageId, userId);
+
+                resultMessages.AddRange(records);
+
+                return resultMessages.Select(r => r.ToModel());
+            }
         }
 
         public async Task<IEnumerable<Message>> GetMessagesAsync(int userId, int friendId, DateTime from, DateTime till)
         {
             using (var session = Connect())
             {
+                var resultMessages = new List<MessageDto>();
                 var mapper = new Mapper(session);
                 var query = @$"SELECT id, sender_id, receiver_id, text, created
                                FROM {KEY_SPACE}.{TABLE_NAME}
@@ -54,8 +80,12 @@ namespace MessageService.Persistence
                                ALLOW FILTERING;";
 
                 var records = await mapper.FetchAsync<MessageDto>(query, from, till, userId, friendId);
+                resultMessages.AddRange(records);
 
-                return records.Select(r => r.ToModel());
+                records = await mapper.FetchAsync<MessageDto>(query, from, till, friendId, userId);
+                resultMessages.AddRange(records);
+
+                return resultMessages.Select(r => r.ToModel());
             }
         }
 
