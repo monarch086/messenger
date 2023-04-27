@@ -49,9 +49,9 @@ namespace MessageService.Controllers
             var chatsSet = new HashSet<string>();
             var resultChats = new List<Message>();
 
-            var sortedMEssages = messages.OrderByDescending(m => m.Created);
+            var sortedMessages = messages.OrderByDescending(m => m.Created);
 
-            foreach (var message in messages)
+            foreach (var message in sortedMessages)
             {
                 if (chatsSet.Contains(message.ChatKey)) continue;
 
