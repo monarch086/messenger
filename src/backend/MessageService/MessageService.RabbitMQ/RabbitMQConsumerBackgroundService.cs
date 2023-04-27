@@ -41,7 +41,7 @@ namespace MessageService.RabbitMQ
                 var model = JsonConvert.DeserializeObject<RabbitMQModel.Message>(message);
                 await HandleMessageAsync(model!);
             };
-
+            Channel.QueueDeclare(_queue, exclusive: false, autoDelete: false);
             Channel.BasicConsume(queue: _queue,
                                  autoAck: true,
                                  consumer: consumer);

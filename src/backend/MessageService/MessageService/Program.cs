@@ -16,7 +16,7 @@ var rabbitHost = "rabbitmq";
 var rabbitQueue = "Messages.Created";
 
 
-builder.Services.AddScoped<IMessageRepository, MessageRepository>(_ => new MessageRepository(hosts));
+builder.Services.AddTransient<IMessageRepository, MessageRepository>(_ => new MessageRepository(hosts));
 builder.Services.AddScoped<ICacheService, CacheService>();
 
 builder.Services.AddHostedService(ss => new RabbitMQConsumerBackgroundService(rabbitHost, rabbitQueue, ss.GetRequiredService<IMessageRepository>()));
