@@ -8,6 +8,15 @@ using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        policy =>
+        {
+            policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+        });
+});
+
 // Add services to the container.
 
 //var hosts = new string[] { "127.0.0.1" };
