@@ -12,6 +12,13 @@ namespace MessageService.Persistence
         private const string KEY_SPACE = "CassandraDbContext";
         private const string TABLE_NAME = "messages";
 
+        private readonly string[] _hosts;
+
+        public MessageRepository(string[] hosts)
+        {
+            _hosts = hosts;
+        }
+
         public async Task<Message> AddMessageAsync(Message message)
         {
             using (var session = Connect())
@@ -131,10 +138,15 @@ namespace MessageService.Persistence
 
         private ISession Connect()
         {
-            var cluster = Cluster.Builder()
-                     .AddContactPoint(HOST)
-                     .WithLoadBalancingPolicy(new TokenAwarePolicy(new DCAwareRoundRobinPolicy("datacenter1")))
-                     .Build();
+            var builder = Cluster.Builder()
+                        .WithLoadBalancingPolicy(new TokenAwarePolicy(new DCAwareRoundRobinPolicy("datacenter1")));
+
+            if (_hosts.Length > 1)
+                builder.AddContactPoints(_hosts);
+            else
+                builder.AddContactPoint(_hosts.Single());
+
+            var cluster = builder.Build();
 
             return cluster.Connect(KEY_SPACE);
         }

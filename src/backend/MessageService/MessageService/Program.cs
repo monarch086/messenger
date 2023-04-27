@@ -6,7 +6,8 @@ using Microsoft.AspNetCore.Mvc.ApplicationModels;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddScoped<IMessageRepository, MessageRepository>();
+var localhost = new string[] { "127.0.0.1" };
+builder.Services.AddScoped<IMessageRepository, MessageRepository>(_ => new MessageRepository(localhost));
 
 builder.Services.AddControllers(options =>
 {
