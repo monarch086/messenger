@@ -33,11 +33,13 @@ namespace MessageService.Persistence
                 await session.ExecuteAsync(statement);
 
                 var mapper = new Mapper(session);
-                query = @$"SELECT *
-                           FROM {KEY_SPACE}.{TABLE_NAME}
-                           LIMIT 1;";
+                query = @$"SELECT id, MAX(created) as created
+                           FROM {KEY_SPACE}.{TABLE_NAME};";
 
                 var savedMessage = await mapper.SingleAsync<MessageDto>(query);
+                savedMessage.SenderId = message.SenderId;
+                savedMessage.ReceiverId = message.ReceiverId;
+                savedMessage.Text = message.Text;
 
                 return savedMessage.ToModel();
             }
