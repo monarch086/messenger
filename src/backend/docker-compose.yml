@@ -8,8 +8,24 @@ services:
     volumes:
       - ./haproxy:/usr/local/etc/haproxy
 
-  api-gateway1:
-    image: api-gateway
+  cassandra-node1:
+    image: cassandra
+    volumes:
+      - ./volumes/cassandra-node1:/var/lib/cassandra
+    # environment:
+    #   - 'CASSANDRA_SEEDS=cassandra-node2'
+
+  # cassandra-node2:
+  #   image: cassandra
+  #   volumes:
+  #     - ./volumes/cassandra-node2:/var/lib/cassandra
+  #   environment:
+  #     - 'CASSANDRA_SEEDS=cassandra-node1'
+
+  message-service1:
+    image: message-service
+    depends_on:
+      - cassandra-node1
     ports:
       - 5011:5011
     environment:
@@ -17,8 +33,10 @@ services:
       ASPNETCORE_URLS: "http://*:5011"
       APPID: "1"
 
-  api-gateway2:
-    image: api-gateway
+  message-service2:
+    image: message-service
+    depends_on:
+      - cassandra-node1
     ports:
       - 5012:5011
     environment:
@@ -26,8 +44,10 @@ services:
       ASPNETCORE_URLS: "http://*:5011"
       APPID: "2"
 
-  api-gateway3:
-    image: api-gateway
+  message-service3:
+    image: message-service
+    depends_on:
+      - cassandra-node1
     ports:
       - 5013:5011
     environment:
@@ -35,24 +55,5 @@ services:
       ASPNETCORE_URLS: "http://*:5011"
       APPID: "3"
 
-  cassandra-node1:
-    image: cassandra
-    ports:
-      - "7001:7000"
-    environment:
-      - 'CASSANDRA_SEEDS=cassandra-node2'
-
-  cassandra-node2:
-    image: cassandra
-    ports:
-      - "7002:7000"
-    environment:
-      - 'CASSANDRA_SEEDS=cassandra-node1'
-
-  message-service1:
-    image: message-service
-    ports:
-      - 5111:5011
-    environment:
-      ASPNETCORE_ENVIRONMENT: "Development"
-      ASPNETCORE_URLS: "http://*:5011"
+  redis:
+    image: redis

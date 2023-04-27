@@ -8,9 +8,15 @@ namespace MessageService.Persistence
 {
     public class MessageRepository : IMessageRepository
     {
-        private const string HOST = "127.0.0.1";
         private const string KEY_SPACE = "CassandraDbContext";
         private const string TABLE_NAME = "messages";
+
+        private readonly string[] _hosts;
+
+        public MessageRepository(string[] hosts)
+        {
+            _hosts = hosts;
+        }
 
         public async Task<Message> AddMessageAsync(Message message)
         {
@@ -27,11 +33,13 @@ namespace MessageService.Persistence
                 await session.ExecuteAsync(statement);
 
                 var mapper = new Mapper(session);
-                query = @$"SELECT *
-                           FROM {KEY_SPACE}.{TABLE_NAME}
-                           LIMIT 1;";
+                query = @$"SELECT id, MAX(created) as created
+                           FROM {KEY_SPACE}.{TABLE_NAME};";
 
                 var savedMessage = await mapper.SingleAsync<MessageDto>(query);
+                savedMessage.SenderId = message.SenderId;
+                savedMessage.ReceiverId = message.ReceiverId;
+                savedMessage.Text = message.Text;
 
                 return savedMessage.ToModel();
             }
@@ -47,9 +55,12 @@ namespace MessageService.Persistence
                                FROM {KEY_SPACE}.{TABLE_NAME}
                                WHERE id > ?
                                  AND sender_id = ?
+                                 {(friendId.HasValue? "AND receiver_id = ?" : "")}
                                ALLOW FILTERING;";
 
-                var records = await mapper.FetchAsync<MessageDto>(query, lastMessageId, userId);
+                var records = friendId.HasValue
+                              ? await mapper.FetchAsync<MessageDto>(query, lastMessageId, userId, friendId)
+                              : await mapper.FetchAsync<MessageDto>(query, lastMessageId, userId);
 
                 resultMessages.AddRange(records);
 
@@ -57,9 +68,12 @@ namespace MessageService.Persistence
                                FROM {KEY_SPACE}.{TABLE_NAME}
                                WHERE id > ?
                                  AND receiver_id = ?
+                                 {(friendId.HasValue ? "AND sender_id = ?" : "")}
                                ALLOW FILTERING;";
 
-                records = await mapper.FetchAsync<MessageDto>(query, lastMessageId, userId);
+                records = friendId.HasValue
+                              ? await mapper.FetchAsync<MessageDto>(query, lastMessageId, userId, friendId)
+                              : await mapper.FetchAsync<MessageDto>(query, lastMessageId, userId);
 
                 resultMessages.AddRange(records);
 
@@ -89,14 +103,89 @@ namespace MessageService.Persistence
             }
         }
 
+        public async Task<IEnumerable<Message>> GetMessagesAsync(int userId, DateTime from, DateTime till)
+        {
+            using (var session = Connect())
+            {
+                var resultMessages = new List<MessageDto>();
+                var mapper = new Mapper(session);
+                var query = @$"SELECT id, sender_id, receiver_id, text, created
+                               FROM {KEY_SPACE}.{TABLE_NAME}
+                               WHERE id > maxTimeuuid(?) AND id < minTimeuuid(?)
+                                 AND sender_id = ?
+                               ALLOW FILTERING;";
+
+                var records = await mapper.FetchAsync<MessageDto>(query, from, till, userId);
+                resultMessages.AddRange(records);
+
+                query = @$"SELECT id, sender_id, receiver_id, text, created
+                               FROM {KEY_SPACE}.{TABLE_NAME}
+                               WHERE id > maxTimeuuid(?) AND id < minTimeuuid(?)
+                                 AND receiver_id = ?
+                               ALLOW FILTERING;";
+
+                records = await mapper.FetchAsync<MessageDto>(query, from, till, userId);
+                resultMessages.AddRange(records);
+
+                return resultMessages.Select(r => r.ToModel());
+            }
+        }
+
+        public void EnsureTableCreated()
+        {
+            using (var session = Connect())
+            {
+                var query = $"CREATE KEYSPACE IF NOT EXISTS {KEY_SPACE} " +
+                            $"WITH replication = {{'class': 'NetworkTopologyStrategy', 'datacenter1': '3'}} " +
+                            $"AND durable_writes = true;";
+                session.Execute(query);
+
+                query = @$"
+                CREATE TABLE IF NOT EXISTS {KEY_SPACE}.{TABLE_NAME} (
+                    id timeuuid,
+                    sender_id int,
+                    receiver_id int,
+                    text text,
+                    created timestamp,
+                    PRIMARY KEY (id, created)
+                )
+                WITH CLUSTERING ORDER BY (created DESC);";
+                session.Execute(query);
+
+                query = $"CREATE INDEX IF NOT EXISTS sender_idx " +
+                        $"ON {KEY_SPACE}.{TABLE_NAME} (sender_id);";
+                session.Execute(query);
+
+                query = $"CREATE INDEX IF NOT EXISTS receiver_idx " +
+                        $"ON {KEY_SPACE}.{TABLE_NAME} (receiver_id);";
+                session.Execute(query);
+            }
+        }
+
+        public void DropTable()
+        {
+            using (var session = Connect())
+            {
+                var query = @$"DROP TABLE IF EXISTS {KEY_SPACE}.{TABLE_NAME};";
+                session.Execute(query);
+            }
+        }
+
         private ISession Connect()
         {
-            var cluster = Cluster.Builder()
-                     .AddContactPoint(HOST)
-                     .WithLoadBalancingPolicy(new TokenAwarePolicy(new DCAwareRoundRobinPolicy("datacenter1")))
-                     .Build();
+            var builder = Cluster.Builder()
+                        .WithLoadBalancingPolicy(new TokenAwarePolicy(new DCAwareRoundRobinPolicy("datacenter1")));
 
-            return cluster.Connect(KEY_SPACE);
+            if (_hosts.Length > 1)
+                builder.AddContactPoints(_hosts);
+            else
+                builder.AddContactPoint(_hosts.Single());
+
+            var cluster = builder
+                .WithDefaultKeyspace(KEY_SPACE)
+                .Build();
+
+            return cluster.ConnectAndCreateDefaultKeyspaceIfNotExists();
         }
     }
 }
