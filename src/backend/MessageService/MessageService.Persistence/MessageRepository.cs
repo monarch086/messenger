@@ -1,4 +1,4 @@
-using Cassandra;
+﻿using Cassandra;
 using Cassandra.Mapping;
 using MessageService.Domain.Model;
 using MessageService.Domain.Persistence;
@@ -103,7 +103,7 @@ namespace MessageService.Persistence
             }
         }
 
-        public void CreateTable()
+        public void EnsureTableCreated()
         {
             using (var session = Connect())
             {

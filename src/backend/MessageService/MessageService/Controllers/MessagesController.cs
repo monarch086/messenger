@@ -1,4 +1,4 @@
-using MessageService.Domain.Model;
+﻿using MessageService.Domain.Model;
 using MessageService.Domain.Persistence;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,6 +13,8 @@ namespace MessageService.Controllers
         public MessagesController(IMessageRepository messageRepository)
         {
             _messageRepository = messageRepository;
+
+            // _messageRepository.EnsureTableCreated();
         }
 
         [HttpPost]
