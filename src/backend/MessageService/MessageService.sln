@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessageService.Domain", "Me
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessageService.Persistence", "MessageService.Persistence\MessageService.Persistence.csproj", "{6758437A-5619-4283-BDC7-9D3123407D99}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageService.Cache", "MessageService.Cache\MessageService.Cache.csproj", "{3AC4A8D1-3CBF-467F-8492-C2D315CA2964}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessageService.Cache", "MessageService.Cache\MessageService.Cache.csproj", "{3AC4A8D1-3CBF-467F-8492-C2D315CA2964}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageService.RabbitMQ", "MessageService.RabbitMQ\MessageService.RabbitMQ.csproj", "{7831AC64-E87C-4DB2-91DE-53AED98198E0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{3AC4A8D1-3CBF-467F-8492-C2D315CA2964}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3AC4A8D1-3CBF-467F-8492-C2D315CA2964}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3AC4A8D1-3CBF-467F-8492-C2D315CA2964}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7831AC64-E87C-4DB2-91DE-53AED98198E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7831AC64-E87C-4DB2-91DE-53AED98198E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7831AC64-E87C-4DB2-91DE-53AED98198E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7831AC64-E87C-4DB2-91DE-53AED98198E0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
