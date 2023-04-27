@@ -16,10 +16,13 @@ namespace MessageService.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Message> Get()
+        public async Task<IEnumerable<Message>> Get()
         {
-            return Enumerable.Range(1, 5).Select(index => new Message(index, index, $"text {index}"))
-            .ToArray();
+            var from = DateTime.Now - TimeSpan.FromDays(1);
+            var till = DateTime.Now + TimeSpan.FromDays(1);
+            var messages = await _messageRepository.GetMessagesAsync(1, 2, from, till);
+
+            return messages;
         }
 
         [HttpPost]

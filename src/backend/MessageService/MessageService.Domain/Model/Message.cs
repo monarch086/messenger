@@ -8,7 +8,7 @@
 
         public int ReceiverId { get; init; }
 
-        public string Text { get; init; }
+        public string Text { get; init; } = string.Empty;
 
         public DateTime Created { get; init; }
 
@@ -21,11 +21,6 @@
             Created = created;
         }
 
-        public Message(int senderId, int receiverId, string text)
-        {
-            SenderId = senderId;
-            ReceiverId = receiverId;
-            Text = text;
-        }
+        public Message() { }
     }
 }
