@@ -37,17 +37,15 @@ services:
 
   cassandra-node1:
     image: cassandra
-    ports:
-      - "7001:7000"
-    environment:
-      - 'CASSANDRA_SEEDS=cassandra-node2'
+    volumes:
+      - ./volumes/cassandra-node1:/var/lib/cassandra
+    # environment:
+    #   - 'CASSANDRA_SEEDS=cassandra-node2'
 
-  cassandra-node2:
-    image: cassandra
-    ports:
-      - "7002:7000"
-    environment:
-      - 'CASSANDRA_SEEDS=cassandra-node1'
+  # cassandra-node2:
+  #   image: cassandra
+  #   environment:
+  #     - 'CASSANDRA_SEEDS=cassandra-node1'
 
   message-service1:
     image: message-service
