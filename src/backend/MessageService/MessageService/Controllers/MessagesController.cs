@@ -37,7 +37,7 @@ namespace MessageService.Controllers
             return messages;
         }
 
-        [HttpGet("latest/{userId}")]
+        [HttpGet("/{userId}/latest")]
         public async Task<IEnumerable<Message>> GetLatest(int userId, Guid lastMessageId, int? friendId = null)
         {
             var messages = await _messageRepository.GetLatestMessagesAsync(userId, lastMessageId, friendId);

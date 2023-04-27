@@ -9,5 +9,7 @@ namespace MessageService.Domain.Persistence
         Task<IEnumerable<Message>> GetMessagesAsync(int userId, int friendId, DateTime from, DateTime till);
 
         Task<IEnumerable<Message>> GetLatestMessagesAsync(int userId, Guid lastMessageId, int? friendId = null);
+
+        void EnsureTableCreated();
     }
 }
