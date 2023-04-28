@@ -28,8 +28,6 @@ namespace MessageService.RabbitMQ
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            Console.WriteLine($"ConsumerHostedService started");
-
             var factory = new ConnectionFactory { HostName = _host };
             Connection = factory.CreateConnection();
             Channel = Connection.CreateModel();
