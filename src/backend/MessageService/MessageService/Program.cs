@@ -29,7 +29,7 @@ var rabbitQueue = "message.create";
 builder.Services.AddTransient<IMessageRepository, MessageRepository>(_ => new MessageRepository(hosts));
 builder.Services.AddScoped<ICacheService, CacheService>();
 
-builder.Services.AddTransient<IRabbitMQProducer, RabbitMQProducer>(_ => new RabbitMQProducer(rabbitHost, rabbitQueue));
+builder.Services.AddHostedService(_ => new RabbitMQProducer(rabbitHost, rabbitQueue));
 builder.Services.AddHostedService(ss => new RabbitMQConsumerBackgroundService(rabbitHost, rabbitQueue, ss.GetRequiredService<IMessageRepository>()));
 
 builder.Services.AddControllers(options =>
