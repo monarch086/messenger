@@ -33,15 +33,14 @@ namespace MessageService.RabbitMQ
             var factory = new ConnectionFactory { HostName = _host };
             Connection = factory.CreateConnection();
             Channel = Connection.CreateModel();
-            var consumer = new AsyncEventingBasicConsumer(Channel);
+            var consumer = new EventingBasicConsumer(Channel);
 
-            consumer.Received += async (o, a) =>
+            consumer.Received += (o, a) =>
             {
                 var message = Encoding.UTF8.GetString(a.Body.ToArray())!;
                 var model = JsonConvert.DeserializeObject<RabbitMQModel.Message>(message);
-                await HandleMessageAsync(model!);
+                HandleMessageAsync(model!);
             };
-            Channel.QueueDeclare(_queue, exclusive: false, autoDelete: false);
             Channel.BasicConsume(queue: _queue,
                                  autoAck: true,
                                  consumer: consumer);
@@ -57,14 +56,14 @@ namespace MessageService.RabbitMQ
             return Task.CompletedTask;
         }
 
-        private async Task HandleMessageAsync(RabbitMQModel.Message message)
+        private void HandleMessageAsync(RabbitMQModel.Message message)
         {
-            await _messageRepository.AddMessageAsync(new DomainModel.Message
+            _messageRepository.AddMessageAsync(new DomainModel.Message
             {
                 SenderId = message.SenderId,
                 ReceiverId = message.ReceiverId,
                 Text = message.Text
-            });
+            }).GetAwaiter().GetResult();
         }
 
     }
