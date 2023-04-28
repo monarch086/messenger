@@ -77,7 +77,9 @@ namespace MessageService.Persistence
 
                 resultMessages.AddRange(records);
 
-                return resultMessages.Select(r => r.ToModel());
+                return resultMessages
+                    .OrderByDescending(m => m.Created)
+                    .Select(r => r.ToModel());
             }
         }
 
@@ -99,7 +101,9 @@ namespace MessageService.Persistence
                 records = await mapper.FetchAsync<MessageDto>(query, from, till, friendId, userId);
                 resultMessages.AddRange(records);
 
-                return resultMessages.Select(r => r.ToModel());
+                return resultMessages
+                    .OrderByDescending(m => m.Created)
+                    .Select(r => r.ToModel());
             }
         }
 
@@ -127,7 +131,9 @@ namespace MessageService.Persistence
                 records = await mapper.FetchAsync<MessageDto>(query, from, till, userId);
                 resultMessages.AddRange(records);
 
-                return resultMessages.Select(r => r.ToModel());
+                return resultMessages
+                    .OrderByDescending(m => m.Created)
+                    .Select(r => r.ToModel());
             }
         }
 
