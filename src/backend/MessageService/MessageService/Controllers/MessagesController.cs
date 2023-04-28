@@ -1,5 +1,6 @@
 ﻿using MessageService.Domain.Model;
 using MessageService.Domain.Persistence;
+using MessageService.RabbitMQ;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MessageService.Controllers
@@ -9,18 +10,20 @@ namespace MessageService.Controllers
     public class MessagesController : ControllerBase
     {
         private IMessageRepository _messageRepository;
+        private IRabbitMQProducer _rabbitMQProducer;
 
-        public MessagesController(IMessageRepository messageRepository)
+        public MessagesController(IMessageRepository messageRepository, IRabbitMQProducer rabbitMQProducer)
         {
             _messageRepository = messageRepository;
+            _rabbitMQProducer = rabbitMQProducer;
         }
 
         [HttpPost]
-        public async Task<Message> Add(Message message)
+        public ActionResult Add(Message message)
         {
-            var savedMessage = await _messageRepository.AddMessageAsync(message);
+            _rabbitMQProducer.Produce(message);
 
-            return savedMessage;
+            return Ok();
         }
 
         [HttpGet("/massages/{userId}")]

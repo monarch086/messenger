@@ -5,6 +5,7 @@ using MessageService.Domain.Persistence;
 using MessageService.Persistence;
 using MessageService.RabbitMQ;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,13 +22,14 @@ builder.Services.AddCors(options =>
 
 //var hosts = new string[] { "127.0.0.1" };
 var hosts = new string[] { "cassandra-node1" };
-var rabbitHost = "rabbitmq";
-var rabbitQueue = "Messages.Created";
 
+var rabbitHost = "rabbitmq";
+var rabbitQueue = "message.create";
 
 builder.Services.AddTransient<IMessageRepository, MessageRepository>(_ => new MessageRepository(hosts));
 builder.Services.AddScoped<ICacheService, CacheService>();
 
+builder.Services.AddTransient<IRabbitMQProducer, RabbitMQProducer>(_ => new RabbitMQProducer(rabbitHost, rabbitQueue));
 builder.Services.AddHostedService(ss => new RabbitMQConsumerBackgroundService(rabbitHost, rabbitQueue, ss.GetRequiredService<IMessageRepository>()));
 
 builder.Services.AddControllers(options =>
