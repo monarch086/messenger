@@ -21,20 +21,24 @@ const chatsData: Chat[] = [
     {
         id: 0,
         title: 'chat 1',
-        messages: [{
+        /*messages: [{
             id: 0,
             content: 'cool first message and it really works cool huh?'
-        }],
+        }],*/
+        other: 10,
+        messages: [],
     },
     {
         id: 1,
         title: 'chat 2',
         messages: [],
+        other: 20,
     },
     {
         id: 2,
         title: 'chat 3',
         messages: [],
+        other: 30,
     }
 ];
 
@@ -67,7 +71,7 @@ function ChatListItem({ chat }: { chat: Chat}) {
     </Col>
 }
 
-function ChatsList() {
+function ChatsList({ select }: { select: (other: number) => void}) {
     /*const dispatch = useDispatch();
     const [search, setSearch] = useState('');
     const [dialogData, setDialogData] = useState<Message | null>(null);
@@ -92,7 +96,9 @@ function ChatsList() {
     const [chats, setChats] = useState<Chat[]>([...chatsData]);
 
     return <ChatsContainer>
-        { chats.map(chat => <ChatListItem key={chat.id} chat={chat}></ChatListItem>) }
+        { chats.map(chat => <div onClick={() => select(chat.other!)}>
+            <ChatListItem key={chat.id} chat={chat}></ChatListItem>
+        </div> ) }
     </ChatsContainer>;
 }
 

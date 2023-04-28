@@ -6,6 +6,7 @@ import styled from "styled-components";
 import {Message} from "./models/chat.model";
 import ChatsList from "./components/chats-list.component";
 import ChatPage from "./components/chat-page.component";
+import axios from "axios";
 
 
 const RootContainer = styled.div`
@@ -18,6 +19,8 @@ const ChatsListContainer = styled.div`
   flex: 30% 0 0;
   max-width: 350px;
 `;
+
+const userid = 10;
 
 function App() {
     const dispatch = useDispatch();
@@ -34,14 +37,24 @@ function App() {
     }
 
     useEffect( () => {
-        getStubData(false, 0);
-    }, [search]);
+
+        axios.get(`http://localhost:8080/chats/${userid}`).then(res =>
+            console.log(res),
+        ).catch(() => console.log('err'));
+
+    }, []);
+
+    const [other, setOther] = useState<number>();
+
+    const selectOther = (val: number): void => {
+        setOther(val);
+    }
 
     return <RootContainer>
         <ChatsListContainer>
-            <ChatsList></ChatsList>
+            <ChatsList select={selectOther}></ChatsList>
         </ChatsListContainer>
-        <ChatPage></ChatPage>
+        <ChatPage key={other} me={userid} other={other}></ChatPage>
     </RootContainer>
 }
 

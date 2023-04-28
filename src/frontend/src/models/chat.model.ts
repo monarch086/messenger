@@ -4,6 +4,7 @@ export interface Chat {
     title: string;
     participants?: User[];
     messages: Message[];
+    other?: number; // id of other participant
 }
 
 export interface User {
