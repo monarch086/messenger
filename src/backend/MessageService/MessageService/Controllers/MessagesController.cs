@@ -10,9 +10,9 @@ namespace MessageService.Controllers
     public class MessagesController : ControllerBase
     {
         private IMessageRepository _messageRepository;
-        private IRabbitMQProducer _rabbitMQProducer;
+        private RabbitMQProducer _rabbitMQProducer;
 
-        public MessagesController(IMessageRepository messageRepository, IRabbitMQProducer rabbitMQProducer)
+        public MessagesController(IMessageRepository messageRepository, RabbitMQProducer rabbitMQProducer)
         {
             _messageRepository = messageRepository;
             _rabbitMQProducer = rabbitMQProducer;
